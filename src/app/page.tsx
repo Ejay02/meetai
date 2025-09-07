@@ -5,6 +5,17 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 
+/**
+ * Renders a sign-up form and handles creating a user via the auth client.
+ *
+ * The component maintains controlled inputs for name, email, and password, and
+ * submits those values to `authClient.signUp.email` when the "Create User"
+ * button is clicked. On success or error it uses simple alert UX (placeholder
+ * for real navigation or error display).
+ *
+ * @returns A React element containing the sign-up form (name, email, password)
+ * and a submit button.
+ */
 export default function Home() {
 
   const [email, setEmail] = useState("");
