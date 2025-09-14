@@ -1,8 +1,12 @@
-"use client";
-
-import { GeistSans } from "geist/font";
-import { GeistMono } from "geist/font";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import "./globals.css";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "MeetAI",
+  description: "AI-powered meeting platform",
+};
 
 export default function RootLayout({
   children,
@@ -10,12 +14,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${GeistSans.variable} ${GeistMono.variable} antialiased`}
-        suppressHydrationWarning
-      >
-        {children}
+    <html lang="en">
+      <body className={`${GeistSans.variable} ${GeistMono.variable} antialiased`} suppressHydrationWarning>
+        <main>{children}</main>
       </body>
     </html>
   );
