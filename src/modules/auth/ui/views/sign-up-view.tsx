@@ -29,8 +29,14 @@ import { useState } from "react";
 const formSchema = z
   .object({
     name: z.string().trim().min(1, { message: "Name is required" }),
-    email: z.string().trim().email({ message: "Enter a valid email" }),
-    password: z.string().min(8, { message: "Password must be at least 8 characters" }),
+    email: z
+      .string()
+      .trim()
+      .toLowerCase()
+      .email({ message: "Enter a valid email" }),
+    password: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters" }),
     confirmPassword: z
       .string()
       .min(1, { message: "Confirm password is required" }),
@@ -70,11 +76,11 @@ export const SignUpView = () => {
         onSuccess: () => {
           setPending(false);
           form.reset();
-          router.push("/");
+          router.replace("/");
         },
         onError: ({ error: err }) => {
           setPending(false);
-          setError(err.message);
+          setError(err?.message ?? "Sign up failed. Please try again.");
         },
       }
     );
@@ -86,7 +92,11 @@ export const SignUpView = () => {
         <CardContent className="grid p-0 md:grid-cols-2">
           {/* Form Section */}
           <Form {...form}>
-            <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="p-6 md:p-8">
+            <form
+              noValidate
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="p-6 md:p-8"
+            >
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col items-center text-center">
                   <h1 className="text-2xl font-bold">Let&apos;s get started</h1>
@@ -153,7 +163,7 @@ export const SignUpView = () => {
                             className="cursor-text"
                             type="password"
                             autoComplete="new-password"
-                            minLength={1}
+                            minLength={8}
                             placeholder="*******"
                             disabled={pending}
                             {...field}
@@ -177,7 +187,7 @@ export const SignUpView = () => {
                             className="cursor-text"
                             type="password"
                             autoComplete="new-password"
-                            minLength={1}
+                            minLength={8}
                             placeholder="*******"
                             disabled={pending}
                             {...field}
@@ -192,10 +202,14 @@ export const SignUpView = () => {
                 {!!error && (
                   <Alert
                     variant="destructive"
+                    role="alert"
+                    aria-live="assertive"
                     className="bg-destructive/10 border-none"
                   >
                     <OctagonAlertIcon className="h-4 w-4 !text-destructive" />
-                    <AlertTitle className="text-sm">Something went wrong</AlertTitle>
+                    <AlertTitle className="text-sm">
+                      Something went wrong
+                    </AlertTitle>
                     <AlertDescription>{error}</AlertDescription>
                   </Alert>
                 )}
@@ -251,7 +265,13 @@ export const SignUpView = () => {
 
           {/* Welcome Section */}
           <div className="bg-gradient-radial from-purple-700 to-pink-300 relative hidden md:flex flex-col gap-y-4 items-center justify-center">
-            <Image src="/logo.svg" alt="MeetAI logo" width={67} height={41} priority />
+            <Image
+              src="/logo.svg"
+              alt="MeetAI logo"
+              width={67}
+              height={41}
+              priority
+            />
             <p className="text-3xl text-white font-bold">
               Welcome to <strong>MeetAI</strong>
             </p>
