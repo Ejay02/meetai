@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
+import { FaGithub, FaGoogle } from "react-icons/fa";
+
 import {
   Form,
   FormControl,
@@ -23,16 +25,20 @@ import { useForm } from "react-hook-form";
 import Link from "next/link";
 import Image from "next/image";
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(8, { message: "Password must be at least 8 characters" }),
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters" }),
 });
 
 export const SignInView = () => {
   const router = useRouter();
+
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
@@ -52,6 +58,7 @@ export const SignInView = () => {
       {
         email: data.email,
         password: data.password,
+        callbackURL: "/",
       },
       {
         onSuccess: () => {
@@ -66,13 +73,39 @@ export const SignInView = () => {
     );
   };
 
+  const onSocialSignIn = (provider: "github" | "google") => {
+    setError(null);
+    setPending(true);
+
+    authClient.signIn.social(
+      {
+        provider,
+        callbackURL: "/",
+      },
+      {
+        onSuccess: () => {
+          setPending(false);
+          form.reset();
+        },
+        onError: ({ error: err }) => {
+          setPending(false);
+          setError(err?.message ?? "Sign up failed. Please try again.");
+        },
+      }
+    );
+  };
+
   return (
     <div className="flex flex-col gap-6">
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
           {/* Form Section */}
           <Form {...form}>
-            <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="p-6 md:p-8">
+            <form
+              noValidate
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="p-6 md:p-8"
+            >
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col items-center text-center">
                   <h1 className="text-2xl font-bold"> Welcome back</h1>
@@ -116,7 +149,7 @@ export const SignInView = () => {
                             className="cursor-text"
                             type="password"
                             autoComplete="current-password"
-                            minLength={1}
+                            minLength={8}
                             placeholder="*******"
                             disabled={pending}
                             {...field}
@@ -134,7 +167,9 @@ export const SignInView = () => {
                     className="bg-destructive/10 border-none"
                   >
                     <OctagonAlertIcon className="h-4 w-4 !text-destructive" />
-                    <AlertTitle className="text-sm">Something went wrong</AlertTitle>
+                    <AlertTitle className="text-sm">
+                      Something went wrong
+                    </AlertTitle>
                     <AlertDescription>{error}</AlertDescription>
                   </Alert>
                 )}
@@ -161,8 +196,11 @@ export const SignInView = () => {
                     aria-label="Continue with Google"
                     className="cursor-pointer w-full"
                     type="button"
+                    onClick={() => {
+                      onSocialSignIn("google");
+                    }}
                   >
-                    Google
+                    <FaGoogle />
                   </Button>
                   <Button
                     disabled={pending}
@@ -170,8 +208,11 @@ export const SignInView = () => {
                     aria-label="Continue with GitHub"
                     className="cursor-pointer w-full"
                     type="button"
+                    onClick={() => {
+                      onSocialSignIn("github");
+                    }}
                   >
-                    GitHub
+                    <FaGithub />
                   </Button>
                 </div>
 
@@ -189,10 +230,16 @@ export const SignInView = () => {
           </Form>
 
           {/* Welcome Section */}
-          <div className="bg-gradient-radial from-purple-700 to-pink-300 relative hidden md:flex flex-col gap-y-4 items-center justify-center">
-            <Image src="/logo.svg" alt="MeetAI logo" width={67} height={41} priority />
-            <p className="text-3xl text-white font-bold">
-              Welcome to <strong>MeetAI</strong>
+          <div className="bg-orange-800 relative hidden md:flex flex-col gap-y-4 items-center justify-center">
+            <Image
+              src="/logo.svg"
+              alt="MeetAI logo"
+              width={67}
+              height={41}
+              priority
+            />
+            <p className="text-3xl text-yellow-500 font-bold">
+              <strong>MeetAI</strong>
             </p>
           </div>
         </CardContent>
