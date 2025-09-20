@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
+import { FaGithub, FaGoogle } from "react-icons/fa";
+
 import {
   Form,
   FormControl,
@@ -23,8 +25,9 @@ import { useForm } from "react-hook-form";
 import Link from "next/link";
 import Image from "next/image";
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const formSchema = z
   .object({
@@ -48,6 +51,7 @@ const formSchema = z
 
 export const SignUpView = () => {
   const router = useRouter();
+
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
@@ -71,12 +75,35 @@ export const SignUpView = () => {
         name: data.name,
         email: data.email,
         password: data.password,
+        callbackURL: "/",
       },
       {
         onSuccess: () => {
           setPending(false);
           form.reset();
-          router.replace("/");
+          router.push("/");
+        },
+        onError: ({ error: err }) => {
+          setPending(false);
+          setError(err?.message ?? "Sign up failed. Please try again.");
+        },
+      }
+    );
+  };
+
+  const onSocialSignUp = (provider: "github" | "google") => {
+    setError(null);
+    setPending(true);
+
+    authClient.signIn.social(
+      {
+        provider,
+        callbackURL: "/",
+      },
+      {
+        onSuccess: () => {
+          setPending(false);
+          form.reset();
         },
         onError: ({ error: err }) => {
           setPending(false);
@@ -236,8 +263,11 @@ export const SignUpView = () => {
                     aria-label="Continue with Google"
                     className="cursor-pointer w-full"
                     type="button"
+                    onClick={() => {
+                      onSocialSignUp("google");
+                    }}
                   >
-                    Google
+                    <FaGoogle />
                   </Button>
                   <Button
                     disabled={pending}
@@ -245,8 +275,11 @@ export const SignUpView = () => {
                     aria-label="Continue with GitHub"
                     className="cursor-pointer w-full"
                     type="button"
+                    onClick={() => {
+                      onSocialSignUp("github");
+                    }}
                   >
-                    GitHub
+                    <FaGithub />
                   </Button>
                 </div>
 
@@ -264,7 +297,7 @@ export const SignUpView = () => {
           </Form>
 
           {/* Welcome Section */}
-          <div className="bg-gradient-radial from-purple-700 to-pink-300 relative hidden md:flex flex-col gap-y-4 items-center justify-center">
+          <div className="bg-orange-800 relative hidden md:flex flex-col gap-y-4 items-center justify-center">
             <Image
               src="/logo.svg"
               alt="MeetAI logo"
@@ -272,7 +305,7 @@ export const SignUpView = () => {
               height={41}
               priority
             />
-            <p className="text-3xl text-white font-bold">
+            <p className="text-3xl text-yellow-500 font-bold">
               Welcome to <strong>MeetAI</strong>
             </p>
           </div>
