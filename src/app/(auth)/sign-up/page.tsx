@@ -11,7 +11,7 @@ const Page = async () => {
   });
 
   if (session) {
-    redirect("/");
+    redirect("/sign-in");
   }
 
   return <SignUpView />;
