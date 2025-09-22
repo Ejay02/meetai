@@ -46,11 +46,10 @@ export const DashboardSidebar = () => {
   return (
     <Sidebar>
       <SidebarHeader className="text-sidebar-accent-foreground">
-        <Link className="flex items-center gap-2 px-2 pt-2" href="/"></Link>
-        <div className="flex gap-4 items-center">
-          <Image src="/logo.svg" alt="meetai" height={32} width={32} />
-          <p className="text-sm font-semibold">Meet.AI</p>
-        </div>
+        <Link className="flex gap-4 items-center px-2 pt-2" href="/">
+           <Image src="/logo.svg" alt="Meet.AI logo" height={32} width={32} />{" "}
+          <p className="text-sm font-semibold">Meet.AI</p>{" "}
+        </Link>
       </SidebarHeader>
 
       <div className="px-4 py-2">

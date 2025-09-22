@@ -31,7 +31,7 @@ export const GeneratedAvatarProps = ({
   }
 
   return (
-    <Avatar className="{cn(className)}">
+    <Avatar className={cn(className)}>
       <AvatarImage src={avatar.toDataUri()} alt="Avatar" />
       <AvatarFallback
         className={cn("bg-muted text-muted-foreground", className)}

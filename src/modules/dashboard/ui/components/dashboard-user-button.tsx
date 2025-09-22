@@ -29,7 +29,7 @@ export const DashboardUserButton = () => {
   };
 
   // onSelect={() => authClient.signOut()}
-  if (isPending ?? !data?.user) {
+  if (isPending || !data?.user) {
     return (
       <div className="flex items-center gap-2">
         <Skeleton className="h-8 w-8 rounded-full" />
@@ -46,11 +46,16 @@ export const DashboardUserButton = () => {
       <DropdownMenuTrigger className="rounded-lg border border-white/20 backdrop-blur-md p-3 w-full flex items-center justify-between bg-white/10 hover:bg-white/15 shadow-lg shadow-black/5 transition-all duration-200 hover:shadow-xl hover:shadow-black/10 overflow-hidden">
         {data?.user?.image ? (
           <Avatar>
-            <AvatarImage src={data?.user?.image} />
+            <AvatarImage
+              src={data?.user?.image}
+              alt={
+                data?.user?.name ? `${data.user.name}'s avatar` : "User avatar"
+              }
+            />
           </Avatar>
         ) : (
           <GeneratedAvatarProps
-            seed={data?.user?.name}
+            seed={data?.user?.name ?? data?.user?.email ?? "User"}
             variant="initials"
             className="size-9 mr-3"
           />
