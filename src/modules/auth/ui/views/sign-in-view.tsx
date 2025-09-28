@@ -231,7 +231,7 @@ export const SignInView = () => {
 
           {/* Welcome Section */}
           <div
-            className="relative hidden md:flex flex-col gap-y-4 items-center justify-center rounded-2xl shadow-lg bg-gradient-to-br from-orange-800/90 to-orange-600/80 border border-orange-700/40 backdrop-blur-sm backdrop-saturate-150"
+            className="relative hidden md:flex flex-col gap-y-4 items-center justify-center rounded-r-2xl shadow-lg bg-gradient-to-br from-orange-800/90 to-orange-600/80 border border-orange-700/40 backdrop-blur-sm backdrop-saturate-150"
           >
             <Image
               src="/logo.svg"
